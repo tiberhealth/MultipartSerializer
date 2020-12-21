@@ -25,7 +25,7 @@ steps:
     testRunTitle: 'Multipart Serializer Test'
 
 - task: DotNetCoreCLI@2
-  displayName: Publish library'
+  displayName: 'Publish library'
   inputs:
     command: 'publish'
     publishWebProjects: false
@@ -38,4 +38,9 @@ steps:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
     ArtifactName: 'MultipartSerializer_$(Build.BuildNumber)'
     
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'pack'
+    packagesToPack: 'Serializer/*.csproj'
+    versioningScheme: 'byBuildNumber'
 
