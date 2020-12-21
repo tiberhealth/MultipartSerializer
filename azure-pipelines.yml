@@ -37,5 +37,5 @@ steps:
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
     ArtifactName: 'MultipartSerializer_$(Build.BuildNumber)'
-    '
+    
 
