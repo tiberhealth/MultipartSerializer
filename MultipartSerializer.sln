@@ -1,0 +1,70 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26124.0
+MinimumVisualStudioVersion = 15.0.26124.0
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Serializer", "Serializer\Serializer.csproj", "{A4019692-619B-46AC-8F32-4C03BE88B985}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerializerTest", "SerializerTest\SerializerTest.csproj", "{B3E8D735-9D80-49AA-9D72-CB0EB7291E18}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Support", "Support", "{A5CA1BE5-2375-41A2-9398-A3CFB62CE930}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+		LICENSE = LICENSE
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A4019692-619B-46AC-8F32-4C03BE88B985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4019692-619B-46AC-8F32-4C03BE88B985}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4019692-619B-46AC-8F32-4C03BE88B985}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A4019692-619B-46AC-8F32-4C03BE88B985}.Debug|x64.Build.0 = Debug|Any CPU
+		{A4019692-619B-46AC-8F32-4C03BE88B985}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A4019692-619B-46AC-8F32-4C03BE88B985}.Debug|x86.Build.0 = Debug|Any CPU
+		{A4019692-619B-46AC-8F32-4C03BE88B985}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4019692-619B-46AC-8F32-4C03BE88B985}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4019692-619B-46AC-8F32-4C03BE88B985}.Release|x64.ActiveCfg = Release|Any CPU
+		{A4019692-619B-46AC-8F32-4C03BE88B985}.Release|x64.Build.0 = Release|Any CPU
+		{A4019692-619B-46AC-8F32-4C03BE88B985}.Release|x86.ActiveCfg = Release|Any CPU
+		{A4019692-619B-46AC-8F32-4C03BE88B985}.Release|x86.Build.0 = Release|Any CPU
+		{B3E8D735-9D80-49AA-9D72-CB0EB7291E18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3E8D735-9D80-49AA-9D72-CB0EB7291E18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3E8D735-9D80-49AA-9D72-CB0EB7291E18}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B3E8D735-9D80-49AA-9D72-CB0EB7291E18}.Debug|x64.Build.0 = Debug|Any CPU
+		{B3E8D735-9D80-49AA-9D72-CB0EB7291E18}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B3E8D735-9D80-49AA-9D72-CB0EB7291E18}.Debug|x86.Build.0 = Debug|Any CPU
+		{B3E8D735-9D80-49AA-9D72-CB0EB7291E18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3E8D735-9D80-49AA-9D72-CB0EB7291E18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3E8D735-9D80-49AA-9D72-CB0EB7291E18}.Release|x64.ActiveCfg = Release|Any CPU
+		{B3E8D735-9D80-49AA-9D72-CB0EB7291E18}.Release|x64.Build.0 = Release|Any CPU
+		{B3E8D735-9D80-49AA-9D72-CB0EB7291E18}.Release|x86.ActiveCfg = Release|Any CPU
+		{B3E8D735-9D80-49AA-9D72-CB0EB7291E18}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
+		$0.TextStylePolicy = $2
+		$2.inheritsSet = null
+		$2.scope = text/x-csharp
+		$0.CSharpFormattingPolicy = $3
+		$3.scope = text/x-csharp
+		$0.TextStylePolicy = $4
+		$4.FileWidth = 80
+		$4.TabsToSpaces = True
+		$4.scope = text/plain
+		$0.VersionControlPolicy = $5
+	EndGlobalSection
+EndGlobal
