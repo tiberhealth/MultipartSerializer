@@ -27,4 +27,4 @@ steps:
     command: 'publish'
     publishWebProjects: false
     projects: 'Serializer/Serializer.csproj'
-    arguments: '--configuration $(BuildConfiguration) /p:Version=$(Build.BuildNumber)''
+    arguments: '--configuration $(BuildConfiguration) /p:Version=$(Build.BuildNumber)'
