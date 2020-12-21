@@ -8,7 +8,6 @@
     <Copyright>2020</Copyright>
     <PackageIconUrl>https://cdn.tiberhealth.com/assets/TiberLogoImage_1E384B_128Icon.png</PackageIconUrl>
     <NeutralLanguage>en</NeutralLanguage>
-    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <Owners>Tiber Health innovations, Inc.</Owners>
     <PackageProjectUrl>https://github.com/tiberhealth/MultipartSerializer</PackageProjectUrl>
     <Summary>Serializes a C# object into a Multipart Form-Data Object</Summary>
