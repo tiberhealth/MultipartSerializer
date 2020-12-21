@@ -11,20 +11,31 @@ name: '1.0.$(Rev:r)'
 
 steps:
 - task: DotNetCoreCLI@2
+  displayName: 'Build Library'
   inputs:
     command: 'build'
     projects: 'Serializer/Serializer.csproj'
     arguments: '--configuration $(BuildConfiguration) /p:Version=$(Build.BuildNumber)'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Test Library'
   inputs:
     command: 'test'
     projects: 'SerializerTest/SerializerTest.csproj'
     testRunTitle: 'Multipart Serializer Test'
 
 - task: DotNetCoreCLI@2
+  displayName: Publish library'
   inputs:
     command: 'publish'
     publishWebProjects: false
     projects: 'Serializer/Serializer.csproj'
     arguments: '--configuration $(BuildConfiguration) /p:Version=$(Build.BuildNumber)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Save Library'
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    ArtifactName: 'MultipartSerializer_$(Build.BuildNumber)'
+    '
+
