@@ -7,10 +7,16 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  
+name: '1.0.$(Rev:r)'
 
 steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
     projects: 'Serializer/Serializer.csproj'
+    arguments: '--configuration $(BuildConfiguration) /p:Version=$(Build.BuildNumber)'
