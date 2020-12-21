@@ -16,7 +16,6 @@ steps:
     projects: 'Serializer/Serializer.csproj'
     arguments: '--configuration $(BuildConfiguration) /p:Version=$(Build.BuildNumber)'
 
-
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
