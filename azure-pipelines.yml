@@ -38,4 +38,10 @@ steps:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
     ArtifactName: 'MultipartSerializer_$(Build.BuildNumber)'
     
+- task: DotNetCoreCLI@2
+  displayName: 'Pack Library'
+  inputs:
+    command: 'pack'
+    packagesToPack: '**/*.csproj'
+    versioningScheme: 'byBuildNumber'
 
