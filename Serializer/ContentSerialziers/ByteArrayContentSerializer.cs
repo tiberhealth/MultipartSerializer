@@ -1,11 +1,10 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Reflection;
 using TiberHealth.Serializer.Exceptions;
 
 namespace TiberHealth.Serializer.ContentSerializers
 {
-    public class ByteArrayContentSerializer : ContentSerializerBase
+    internal class ByteArrayContentSerializer : ContentSerializerBase
     {
         public ByteArrayContentSerializer(PropertyInfo propertyInfo, object bodyObject, MultipartAttribute attribute = null) : base(propertyInfo, bodyObject, attribute)
         {

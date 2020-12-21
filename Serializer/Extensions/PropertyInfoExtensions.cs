@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
-namespace TiberHealth.Serializer.Extensions
+namespace TiberHealth.Serializer
 {
     public static class PropertyInfoExtensions
     {

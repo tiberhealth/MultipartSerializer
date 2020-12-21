@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using NUnit.Framework;
 using System.Reflection;
-using TiberHealth.Serializer.Extensions;
 using TiberHealth.Serializer;
 using System.Net.Http.Headers;
 

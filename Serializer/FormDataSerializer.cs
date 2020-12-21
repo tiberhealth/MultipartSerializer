@@ -1,6 +1,5 @@
 ﻿using System.Net.Http;
 using System.Linq;
-using TiberHealth.Serializer.Extensions;
 using TiberHealth.Serializer.ContentSerializers;
 
 namespace TiberHealth.Serializer

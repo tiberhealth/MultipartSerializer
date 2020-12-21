@@ -1,11 +1,9 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Reflection;
-using TiberHealth.Serializer.ContentSerialziers;
 
 namespace TiberHealth.Serializer.ContentSerializers
 {
-    public class ContentSerializer : ContentSerializerBase
+    internal class ContentSerializer : ContentSerializerBase
     {
         protected override bool DefaultDispositionHeader => false;
 

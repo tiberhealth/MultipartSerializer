@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Net.Http;
 using System.Reflection;
-using TiberHealth.Serializer.ContentSerializers;
 using TiberHealth.Serializer.Exceptions;
-using TiberHealth.Serializer.Extensions;
 
-namespace TiberHealth.Serializer.ContentSerialziers
+namespace TiberHealth.Serializer.ContentSerializers
 {
-    public class ClassContentSerializer : ContentSerializerBase
+    internal class ClassContentSerializer : ContentSerializerBase
     {
         public ClassContentSerializer(PropertyInfo propertyInfo, object bodyObject, MultipartAttribute attribute) : base(propertyInfo, bodyObject, attribute)
         {

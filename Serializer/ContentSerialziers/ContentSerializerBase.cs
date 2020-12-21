@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Net.Http;
 using System.Reflection;
-using TiberHealth.Serializer.Extensions;
 
 namespace TiberHealth.Serializer.ContentSerializers
 {
-    public abstract class ContentSerializerBase : SerializerBase
+    internal abstract class ContentSerializerBase : SerializerBase
     {
         protected PropertyInfo Property { get; }
         protected object PropertyValue { get; }
