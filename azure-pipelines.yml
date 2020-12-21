@@ -31,12 +31,6 @@ steps:
     publishWebProjects: false
     projects: 'Serializer/Serializer.csproj'
     arguments: '--configuration $(BuildConfiguration) /p:Version=$(Build.BuildNumber)'
-
-- task: PublishBuildArtifacts@1
-  displayName: 'Save Library'
-  inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-    ArtifactName: 'MultipartSerializer_$(Build.BuildNumber)'
     
 - task: DotNetCoreCLI@2
   displayName: 'Pack Library'
@@ -45,9 +39,10 @@ steps:
     packagesToPack: '**/*.csproj'
     versioningScheme: 'byBuildNumber'
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Save Nuget Library'
+- task: NuGetCommand@2
   inputs:
-    PathtoPublish: '**/*.nupkg' 
-    ArtifactName: 'MultipartSerializer_$(Build.BuildNumber)'
-
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'Nuget.Org'
+    
