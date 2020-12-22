@@ -7,6 +7,7 @@ using NUnit.Framework;
 using System.Reflection;
 using TiberHealth.Serializer;
 using System.Net.Http.Headers;
+using Newtonsoft.Json;
 
 namespace SerializerTest
 {
@@ -155,6 +156,30 @@ namespace SerializerTest
             Assert.IsInstanceOf<ByteArrayContent>(Testfile);
             Assert.AreEqual("Testfile.txt", Testfile.Headers.ContentDisposition.FileName);
             Assert.IsNull(Testfile.Headers.ContentType);
+        }
+
+
+        private class MultipartIncludeTestObject
+        {
+            [JsonIgnore, MultipartInclude]
+            public string ShouldBeIncluded => "Bryan";
+
+            [JsonIgnore, Multipart(Name = "AlsoIncluded")]
+            public string ShouldAlsoBeIncluded => "Test";
+
+        }
+        [Test]
+        public void TestMultipartinclude()
+        {
+            var request = new MultipartIncludeTestObject();
+            var response = TiberHealth.Serializer.FormDataSerializer.FormDataContent(request) as MultipartFormDataContent;
+            Assert.IsNotNull(response);
+
+            var testPart = response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"ShouldBeIncluded\"");
+            Assert.IsNotNull(testPart);
+
+            var testPart2 = response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"AlsoIncluded\"");
+            Assert.IsNotNull(testPart2);
         }
     }
 }

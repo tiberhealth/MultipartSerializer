@@ -6,6 +6,22 @@ namespace TiberHealth.Serializer
 {
     public static class PropertyInfoExtensions
     {
+
+        private static Type[] IgnoreAttributes =
+            new[]
+                {
+                    typeof(TiberHealth.Serializer.MultipartIgnoreAttribute),
+                    typeof(Newtonsoft.Json.JsonIgnoreAttribute),
+                    typeof(System.Text.Json.Serialization.JsonIgnoreAttribute)
+                };
+
+        private static Type[] IncludeAttributes =
+            new[]
+                {
+                    typeof(TiberHealth.Serializer.MultipartInclude),
+                    typeof(TiberHealth.Serializer.MultipartAttribute)
+                };
+
         /// <summary>
         /// Identifies an object element if it should be ignored.
         /// To have a property ignored, attach one of the following attributes to the property.
@@ -16,14 +32,8 @@ namespace TiberHealth.Serializer
         /// <param name="property">Property to Analyze</param>
         /// <returns>Boolean: True => Ignore flag is set (ignore), False => Ignore flag is not set (Do NOT ignore)</returns>
         internal static bool IsIgnore(this PropertyInfo property) =>
-            property.GetCustomAttributes().Any(item =>
-                new[]
-                {
-                    typeof(TiberHealth.Serializer.MultipartIgnoreAttribute),
-                    typeof(Newtonsoft.Json.JsonIgnoreAttribute),
-                    typeof(System.Text.Json.Serialization.JsonIgnoreAttribute)
-                }.Contains(item.GetType())
-            );
+            !property.GetCustomAttributes().Any(item => IncludeAttributes.Contains(item.GetType())) &&
+            property.GetCustomAttributes().Any(item => IgnoreAttributes.Contains(item.GetType()));
 
         /// <summary>
         /// Identifies an object elment if it should NOT be ignored.

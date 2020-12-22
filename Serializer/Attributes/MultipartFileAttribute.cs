@@ -13,7 +13,17 @@ namespace TiberHealth.Serializer
         public string FileName { get; set; }
         public string ContentType { get; set; }
 
-        public MultipartFileAttribute()
+        /// <summary>
+        /// Main constructor
+        /// </summary>
+        public MultipartFileAttribute(): this(null)
+        {}
+
+        /// <summary>
+        /// constructor to set the name of the part
+        /// </summary>
+        /// <param name="name">String value to use as the name. (Null means to use the prop[erty name</param>
+        public MultipartFileAttribute(string name): base(name)
         {
             this.Value = "FileBytes";  // Default for value
         }

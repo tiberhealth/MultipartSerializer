@@ -18,6 +18,20 @@ namespace TiberHealth.Serializer
         public string Value { get; set; }
 
         /// <summary>
+        /// Main Constructor
+        /// </summary>
+        public MultipartAttribute() { }
+
+        /// <summary>
+        /// Constructor to set he name field
+        /// </summary>
+        /// <param name="name">String value for the name of the part (null defaults to the property name)</param>
+        public MultipartAttribute(string name): this()
+        {
+            this.Name = name;
+        }
+
+        /// <summary>
         /// Get the name of the Property that is marked to be the Name field
         /// If the property does not exist, assume that it is a static value
         /// </summary>
