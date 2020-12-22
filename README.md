@@ -33,7 +33,7 @@ Data that is in a byte array will be serialized into the ByteArrayContent. The n
 
 If the property is a class structure, the serializer will default to a StringContent and serialize the property into JSON. The Multipart attribute can be use to signal which field of the class should be used as the value instead of serialization. The MultipartFile attribute identifies that class as a file container and uses it parameters to build a ByteArrayContent representing and attaching the byte array as a file, setting the filename and content type. 
 
-## Multipart Attribute
+## [Multipart] Attribute
 
 The Mutipart attribute is used for two primary purposes.
 
@@ -61,7 +61,7 @@ var formData = TiberHealth.Serializer.FormDataserializer.FormDataContent(seriala
 
 The above code will create a StringContent part called CustomerGuid and place the ObjectGuid value from the Customer record for its value. 
 
-## MultipartFile Attribute
+## [MultipartFile] Attribute
 
 The MultiPartFile attribute is to identify the name, filename and content type of the file to be used for creating the content diposition of the content part. 
 
@@ -77,9 +77,13 @@ The MultiPartFile attribute is to identify the name, filename and content type o
 
 ***Note =>*** It is planned for next release to allow a byte stream to be used as well as a byte array.
 
-## MultipartIgnore Attribute
+## [MultipartIgnore] Attribute
 
 The MultipartIgnore attribute is used to identify which properties should be ignored for serialization.  the JsonIgnore from both Newtonsoft.Json and System.Text.Json.Serialization also signal the serializer to not serialize the property. 
+
+## [MultipartInclude] Attribute
+
+The MultipartIncludeore attribute is used to identify which properties should be included for serialization that are marked with the JsonIgnore atttribute.  The attribute is used for when the property should be included with the multipart form data, but will not be included in a JSON serialization. To ignore in the JSON serialization, the JsonIgnore attribute is still required.  
 
 ## Futher Development, Requests and issues
 
