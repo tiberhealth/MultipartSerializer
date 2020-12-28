@@ -67,14 +67,21 @@ namespace SerializerTest
             public string DoNotSendTextJson => "This should not be sent";
 
             [MultipartIgnore, ExpectNotSent] public string DoNotSendMultipartIgnore => "This should not be sent";
+
+            [ExpectNotSent] public DateTime? NullDateTime => null;
+            public DateTime ValidDateTime { get; set; }
         }
 
         [Test]
         public async Task TestMultipartCreation()
         {
-            var request = new TestObject();
+            var testDateTime = DateTime.Now;
+            var request = new TestObject()
+            {
+                ValidDateTime = testDateTime
+            };
+            
             var response = TiberHealth.Serializer.FormDataSerializer.Serialize(request) as MultipartFormDataContent;
-
             Assert.NotNull(response);
 
             var expectedProperties = typeof(TestObject)
@@ -284,6 +291,32 @@ namespace SerializerTest
             
             Assert.AreEqual(0, response.Count(item => item.Headers.ContentDisposition.Name == "\"Field4[]\""));
             Assert.AreEqual(request.field4.Length, response.Count(item => item.Headers.ContentDisposition.Name == "\"field4[]\""));
+        }
+
+        public class NullableTestObject
+        {
+            public DateTime? NullDate => null;
+            public DateTime? PopulatedNullableDate { get; set; }
+        }
+
+        [Test]
+        public async Task TestNullables()
+        {
+            var testDateTime = DateTime.Now.ToUniversalTime();
+            var request = new NullableTestObject()
+            {
+                PopulatedNullableDate = testDateTime
+            };
+            var response = TiberHealth.Serializer.FormDataSerializer.Serialize(request) as MultipartFormDataContent;
+            Assert.IsNotNull(response);
+           
+            Assert.IsNull(response.FirstOrDefault(item => item.Headers.ContentDisposition.Name == "\"NullDate\""));
+
+            var content =
+                response.FirstOrDefault(item => item.Headers.ContentDisposition.Name == "\"PopulatedNullableDate\"");
+            Assert.IsNotNull(content);
+            var results = await content.ReadAsStringAsync();
+            Assert.IsNotNull(results);
         }
     }
 }

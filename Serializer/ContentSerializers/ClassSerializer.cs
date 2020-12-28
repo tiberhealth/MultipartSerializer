@@ -39,8 +39,11 @@ namespace TiberHealth.Serializer.ContentSerializers
 
         private HttpContent[] SerializeProperty(PropertyInfo property)
         {
+            if (property == null) return Array.Empty<HttpContent>();            
             var propValue = property.GetValue(this.Value);
 
+            if (propValue == null) return Array.Empty<HttpContent>();
+            
             var serializerType = typeof(ContentSerializer<>).MakeGenericType(new[] {propValue.GetType()});
             var serializer = Activator.CreateInstance(serializerType, propValue, this, property) as ISerializer;
             return serializer?.ToContent() ?? Array.Empty<HttpContent>();
