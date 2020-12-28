@@ -135,6 +135,14 @@ namespace SerializerTest
                 FileBytes = Encoding.ASCII.GetBytes(
                     "this is a test of the emergancy broadcsting system. If this was a real test....")
             };
+
+            public TestFile TestSingleFile2 => new TestFile
+            {
+                FileName = "Testfile.txt",
+                ContentType = null,
+                FileBytes = Encoding.ASCII.GetBytes(
+                    "this is a test of the emergancy broadcsting system. If this was a real test....")
+            };
         }
 
         [Test]

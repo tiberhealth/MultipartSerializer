@@ -64,8 +64,15 @@ namespace TiberHealth.Serializer.Attributes
             }
         }
 
-        private string GetField(string fieldName, object body, bool defaultValue = true) => 
-            body.GetType().GetProperty(fieldName)?.GetValue(body)?.ToString() ?? (defaultValue ? fieldName : null);
-
+        private string GetField(string fieldName, object body, bool defaultValue = true)
+        {
+            var fieldProperty = body.GetType().GetProperty(fieldName);
+            if (fieldProperty == null)
+            {
+                return defaultValue ? fieldName : null;
+            }
+            
+            return fieldProperty.GetValue(body)?.ToString();
+        }
     }
 }
