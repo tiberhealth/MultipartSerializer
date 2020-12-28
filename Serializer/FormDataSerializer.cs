@@ -4,7 +4,7 @@ using TiberHealth.Serializer.ContentSerializers;
 
 namespace TiberHealth.Serializer
 {
-    public class FormDataSerializer
+    public static class FormDataSerializer
     {
         /// <summary>
         /// Serialize an object to a Multipart Form Data Content
@@ -13,31 +13,27 @@ namespace TiberHealth.Serializer
         /// <typeparam name="TBody"></typeparam>
         /// <param name="bodyObject"></param>
         /// <returns></returns>
-        public static HttpContent FormDataContent<TBody>(TBody bodyObject) where TBody : class => new FormDataSerializer<TBody>(bodyObject).ToContent();
+        public static HttpContent Serialize<TBody>(TBody bodyObject) where TBody : class =>
+            new FormDataSerializer<TBody>(bodyObject).Serialize();
      }
 
-    public class FormDataSerializer<TBody> : SerializerBase
+    public class FormDataSerializer<TBody> : SerializerBase<TBody>
         where TBody: class
     {
-        private MultipartFormDataContent Form;
+        internal FormDataSerializer(TBody bodyObject): base(bodyObject) { }
 
-        internal FormDataSerializer(object bodyObject): base(bodyObject)
+        protected override HttpContent[] Content() =>
+            new ClassSerializer<TBody>(this.Value).ToContent();
+
+        public HttpContent Serialize(string boundary = null)
         {
-            this.Form = new MultipartFormDataContent(); 
-        }
+            var form = string.IsNullOrWhiteSpace(boundary) ? new MultipartFormDataContent() : new MultipartFormDataContent(boundary);
 
-        protected override HttpContent Content()
-        {
-            if (this.BodyObject == null) return this.Form;
+            this.ToContent()
+                .ToList()
+                .ForEach(item => form.Add(item));
 
-            typeof(TBody).GetProperties()
-                            .Where(prop => prop.IsNotIgnore())
-                            .Select(prop => new ContentSerializer(prop, this.BodyObject).ToContent())
-                            .Where(item => item != null)
-                            .ToList()
-                            .ForEach(part => this.Form.Add(part));
-
-            return this.Form;
+            return form;
         }
     }
 }

@@ -1,25 +1,27 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
+using TiberHealth.Serializer.Attributes;
 
-namespace TiberHealth.Serializer
+namespace TiberHealth.Serializer.Extensions
 {
     public static class PropertyInfoExtensions
     {
 
-        private static Type[] IgnoreAttributes =
+        private static readonly Type[] IgnoreAttributes =
             new[]
                 {
-                    typeof(TiberHealth.Serializer.MultipartIgnoreAttribute),
+                    typeof(MultipartIgnoreAttribute),
                     typeof(Newtonsoft.Json.JsonIgnoreAttribute),
                     typeof(System.Text.Json.Serialization.JsonIgnoreAttribute)
                 };
 
-        private static Type[] IncludeAttributes =
+        private static readonly Type[] IncludeAttributes =
             new[]
                 {
-                    typeof(TiberHealth.Serializer.MultipartInclude),
-                    typeof(TiberHealth.Serializer.MultipartAttribute)
+                    typeof(MultipartInclude),
+                    typeof(MultipartAttribute)
                 };
 
         /// <summary>
@@ -44,16 +46,25 @@ namespace TiberHealth.Serializer
         internal static bool IsNotIgnore(this PropertyInfo property) => !property.IsIgnore();
 
         /// <summary>
-        /// Gets the name for the Multipart contexst
+        /// identify if the property is enumerable, and not a string
         /// </summary>
-        /// <param name="property"></param>
-        /// <returns></returns>
-        internal static string MultipartName(this PropertyInfo property) =>
+        /// <param name="property">Property to check for an enumerable</param>
+        /// <returns>True if the property is enumerable false if not</returns>
+        internal static bool IsEnumerable(this PropertyInfo property) =>
+            typeof(IEnumerable).IsAssignableFrom(property.PropertyType) && typeof(string) != property.PropertyType;
+
+        /// <summary>
+        /// Gets the name for the Multipart context
+        /// </summary>
+        /// <param name="property">Property to check for Multipart Attribute</param>
+        /// <param name="defaultFactory">Factory to build default value (optional)</param>
+        /// <returns>The determined name</returns>
+        internal static string MultipartName(this PropertyInfo property, Func<string> defaultFactory = null) =>
             (
-                property.HasCustomAttribute<TiberHealth.Serializer.MultipartAttribute>(out var multipartAttribute) ? multipartAttribute.Name :
+                property.HasCustomAttribute<MultipartAttribute>(out var multipartAttribute) ? multipartAttribute.Name :
                 property.HasCustomAttribute<Newtonsoft.Json.JsonPropertyAttribute>(out var newtonsoftAttribute) ? newtonsoftAttribute.PropertyName : 
                 property.HasCustomAttribute<System.Text.Json.Serialization.JsonPropertyNameAttribute>(out var systemJsonAttribute) ? systemJsonAttribute.Name :
-                null
+                defaultFactory?.Invoke()
             ) ?? property.Name;
 
         /// <summary>
@@ -67,22 +78,51 @@ namespace TiberHealth.Serializer
         /// <summary>
         /// Checks the property for a custom attribute
         /// </summary>
-        /// <typeparam name="TAttirbute">Attribute to find</typeparam>
+        /// <typeparam name="TAttribute">Attribute to find</typeparam>
         /// <param name="property">The property to check</param> 
         /// <param name="attribute">Out variable of the actual attribute</param>
-        /// <returns>True/False indcating if the property was found</returns>
+        /// <returns>True/False indicating if the property was found</returns>
         public static bool HasCustomAttribute<TAttribute>(this PropertyInfo property, out TAttribute attribute)
             where TAttribute : Attribute
         {
-            attribute = property.GetCustomAttribute<TAttribute>();
+            attribute = property?.GetCustomAttribute<TAttribute>();
             return attribute != null;
         }
 
-        public static bool HasCustomerAttribute<TAttribute>(this Type type, out TAttribute attribute)
+        /// <summary>
+        /// Determines if a type has a custom attribute
+        /// </summary>
+        /// <param name="type">The type to check</param>
+        /// <param name="attribute">(Out) the resulting instantiated attribute class that was found</param>
+        /// <typeparam name="TAttribute">Attribute type that is being checked for in the type</typeparam>
+        /// <returns>True/False if the type contained the attribute</returns>
+        public static bool HasCustomAttribute<TAttribute>(this Type type, out TAttribute attribute)
             where TAttribute : Attribute
         {
             attribute = type.GetCustomAttribute<TAttribute>();
             return attribute != null; 
         }
+        
+        /// <summary>
+        /// Determine if a type is a specific type
+        /// </summary>
+        /// <param name="type">Type object to check</param>
+        /// <typeparam name="TType">Type expecting</typeparam>
+        /// <returns></returns>
+        public static bool IsType<TType>(this Type type) =>
+            (type == typeof(TType)) || typeof(TType).IsAssignableFrom(type);
+
+        /// <summary>
+        /// Determine if a type IS NOT a specific type
+        /// </summary>
+        /// <param name="type">Type to check</param>
+        /// <typeparam name="TType">Type expecting</typeparam>
+        /// <returns></returns>
+        public static bool IsNotType<TType>(this Type type) => !type.IsType<TType>();
+
+        public static bool IsEnumerable(this Type type) =>
+            type.IsType<IEnumerable>() &&
+            type.IsNotType<byte[]>() &&
+            type.IsNotType<string>();
     }
 }

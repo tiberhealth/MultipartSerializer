@@ -1,19 +1,27 @@
-﻿using System;
+﻿// ReSharper disable All Justification: this is a test class/file
+
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http;
 using NUnit.Framework;
 using System.Reflection;
-using TiberHealth.Serializer;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using TiberHealth.Serializer.Attributes;
+using TiberHealth.Serializer.Extensions;
 
 namespace SerializerTest
 {
     public class SerializationTest
     {
-        internal class ExpectNotSentAttribute : Attribute { }
+        internal class ExpectNotSentAttribute : Attribute
+        {
+        }
+
         internal enum TestEnum
         {
             value1 = 1,
@@ -38,14 +46,12 @@ namespace SerializerTest
             [System.Text.Json.Serialization.JsonPropertyName("LocalCity")]
             public string City => "Rolesville";
 
-            [TiberHealth.Serializer.Multipart(Name = "LocalState")]
-            public string State => "NC";
+            [Multipart(Name = "LocalState")] public string State => "NC";
 
             public byte[] File => Encoding.ASCII.GetBytes("this is a test of the emergancy broadcsting system");
 
-
-            [MultipartFile(Name = "Testfile2", FileName = "Fname", ContentType = "MimeT", Value = "JsonBytes")]
-            public object TestFile2 => new 
+            [MultipartFile(Name = "Testfile", FileName = "Fname", ContentType = "MimeT", Value = "JsonBytes")]
+            public object TestFile2 => new
             {
                 Fname = "TestFile2.json",
                 MimeT = "text/json",
@@ -60,49 +66,53 @@ namespace SerializerTest
             [System.Text.Json.Serialization.JsonIgnore, ExpectNotSent]
             public string DoNotSendTextJson => "This should not be sent";
 
-            [TiberHealth.Serializer.MultipartIgnore, ExpectNotSent]
-            public string DoNotSendMultipartIgnore => "This should not be sent";
-
+            [MultipartIgnore, ExpectNotSent] public string DoNotSendMultipartIgnore => "This should not be sent";
         }
 
         [Test]
         public async Task TestMultipartCreation()
         {
             var request = new TestObject();
-            var response = TiberHealth.Serializer.FormDataSerializer.FormDataContent(request) as MultipartFormDataContent;
+            var response = TiberHealth.Serializer.FormDataSerializer.Serialize(request) as MultipartFormDataContent;
 
             Assert.NotNull(response);
 
             var expectedProperties = typeof(TestObject)
-                                    .GetProperties()
-                                    .Where(prop => prop.GetCustomAttribute<ExpectNotSentAttribute>() == null)
-                                    .ToArray();
+                .GetProperties()
+                .Where(prop => prop.GetCustomAttribute<ExpectNotSentAttribute>() == null)
+                .ToArray();
 
             Assert.AreEqual(expectedProperties.Count(), response.Count());
             Assert.IsFalse(response.Any(item => item.Headers.ContentDisposition == null));
 
             Assert.IsFalse(response.Any(item => item.Headers.ContentDisposition.Name == "\"City\""));
-            Assert.IsNotNull(response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"StreetAddress\""));
+            Assert.IsNotNull(response.SingleOrDefault(item =>
+                item.Headers.ContentDisposition.Name == "\"StreetAddress\""));
 
             Assert.IsFalse(response.Any(item => item.Headers.ContentDisposition.Name == "\"Address\""));
             Assert.IsNotNull(response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"LocalCity\""));
 
             Assert.IsFalse(response.Any(item => item.Headers.ContentDisposition.Name == "\"State\""));
-            Assert.IsNotNull(response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"LocalState\""));
+            Assert.IsNotNull(response.SingleOrDefault(item =>
+                item.Headers.ContentDisposition.Name == "\"LocalState\""));
 
             Assert.IsNotNull(response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"File\""));
 
-            foreach (var property in typeof(TestObject).GetProperties().Where(prop => prop.HasCustomAttribute<ExpectNotSentAttribute>()))
+            foreach (var property in typeof(TestObject).GetProperties()
+                .Where(prop => prop.HasCustomAttribute<ExpectNotSentAttribute>()))
             {
-                Assert.IsNull(response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == $"\"{property.Name}\""));
+                Assert.IsNull(response.SingleOrDefault(item =>
+                    item.Headers.ContentDisposition.Name == $"\"{property.Name}\""));
             }
 
-            Assert.IsAssignableFrom<ByteArrayContent>(response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"File\""));
+            Assert.IsAssignableFrom<ByteArrayContent>(response.SingleOrDefault(item =>
+                item.Headers.ContentDisposition.Name == "\"File\""));
 
-            var enumValue = await response.Single(item => item.Headers.ContentDisposition.Name == "\"EnumTest\"").ReadAsStringAsync();
+            var enumValue = await response.Single(item => item.Headers.ContentDisposition.Name == "\"EnumTest\"")
+                .ReadAsStringAsync();
             Assert.AreEqual(2, int.Parse(enumValue));
 
-            var testfile = response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"Testfile2\"");
+            var testfile = response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"Testfile\"");
             Assert.IsNotNull(testfile);
             Assert.AreEqual("TestFile2.json", testfile.Headers.ContentDisposition.FileName);
             Assert.AreEqual(MediaTypeHeaderValue.Parse("text/json"), testfile.Headers.ContentType);
@@ -115,7 +125,8 @@ namespace SerializerTest
             {
                 FileName = "Testfile.txt",
                 ContentType = "text/plain",
-                FileBytes = Encoding.ASCII.GetBytes("this is a test of the emergancy broadcsting system. If this was a real test....")
+                FileBytes = Encoding.ASCII.GetBytes(
+                    "this is a test of the emergancy broadcsting system. If this was a real test....")
             };
         }
 
@@ -123,9 +134,10 @@ namespace SerializerTest
         public void MultipartFileTest()
         {
             var request = new MultipartTestObject();
-            var response = TiberHealth.Serializer.FormDataSerializer.FormDataContent(request) as MultipartFormDataContent;
+            var response = TiberHealth.Serializer.FormDataSerializer.Serialize(request) as MultipartFormDataContent;
 
-            var Testfile = response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"SingleFileTest\"");
+            var Testfile =
+                response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"SingleFileTest\"");
             Assert.IsNotNull(Testfile);
 
             Assert.IsInstanceOf<ByteArrayContent>(Testfile);
@@ -139,7 +151,8 @@ namespace SerializerTest
             public TestFile TestElement => new TestFile
             {
                 FileName = "Testfile.txt",
-                FileBytes = Encoding.ASCII.GetBytes("this is a test of the emergancy broadcsting system. If this was a real test....")
+                FileBytes = Encoding.ASCII.GetBytes(
+                    "this is a test of the emergancy broadcsting system. If this was a real test....")
             };
         }
 
@@ -147,7 +160,7 @@ namespace SerializerTest
         public void NoContentTypeTest()
         {
             var request = new NoContentTestObject();
-            var response = TiberHealth.Serializer.FormDataSerializer.FormDataContent(request) as MultipartFormDataContent;
+            var response = TiberHealth.Serializer.FormDataSerializer.Serialize(request) as MultipartFormDataContent;
             Assert.IsNotNull(response);
 
             var Testfile = response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"TestElement\"");
@@ -161,25 +174,116 @@ namespace SerializerTest
 
         private class MultipartIncludeTestObject
         {
-            [JsonIgnore, MultipartInclude]
-            public string ShouldBeIncluded => "Bryan";
+            [JsonIgnore, MultipartInclude] public string ShouldBeIncluded => "Bryan";
 
             [JsonIgnore, Multipart(Name = "AlsoIncluded")]
             public string ShouldAlsoBeIncluded => "Test";
-
         }
+
         [Test]
         public void TestMultipartinclude()
         {
             var request = new MultipartIncludeTestObject();
-            var response = TiberHealth.Serializer.FormDataSerializer.FormDataContent(request) as MultipartFormDataContent;
+            var response = TiberHealth.Serializer.FormDataSerializer.Serialize(request) as MultipartFormDataContent;
             Assert.IsNotNull(response);
 
-            var testPart = response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"ShouldBeIncluded\"");
+            var testPart =
+                response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"ShouldBeIncluded\"");
             Assert.IsNotNull(testPart);
 
-            var testPart2 = response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"AlsoIncluded\"");
+            var testPart2 =
+                response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"AlsoIncluded\"");
             Assert.IsNotNull(testPart2);
+        }
+
+
+        [MultipartFile(FileName = "Name", ContentType = "MimeType", Value = "FileBytes")]
+        private class AttachmentTestFileObject
+        {
+            public string Name { get; set; }
+            public string MimeType { get; set; }
+            public byte[] FileBytes { get; set; }
+        }
+
+        private class AttachmentTestObject
+        {
+            [Multipart(Name = "FilePart")] public IEnumerable<AttachmentTestFileObject> Files { get; set; }
+
+            public string[] StringArray => new[] {"test 1", "test 2", "test 3", "test 4"};
+
+            [Multipart(Name = "Id")] public int[] IntArray => new[] {1, 2, 3, 4, 5};
+        }
+
+        [Test]
+        public void TestArrayObjects()
+        {
+            var request = new AttachmentTestObject
+            {
+                Files = new[]
+                {
+                    new AttachmentTestFileObject()
+                    {
+                        Name = "file1.txt", MimeType = "plain/text", FileBytes = Encoding.ASCII.GetBytes("Test file 1")
+                    },
+                    new AttachmentTestFileObject()
+                    {
+                        Name = "file2.txt", MimeType = "plain/text", FileBytes = Encoding.ASCII.GetBytes("Test file 2")
+                    },
+                    new AttachmentTestFileObject()
+                    {
+                        Name = "file3.txt", MimeType = "plain/text", FileBytes = Encoding.ASCII.GetBytes("Test file 3")
+                    }
+                }
+            };
+            var response = TiberHealth.Serializer.FormDataSerializer.Serialize(request) as MultipartFormDataContent;
+            Assert.IsNotNull(response);
+
+            var expectedCount = request.Files.Count() + request.StringArray.Count() + request.IntArray.Count();
+            Assert.AreEqual(expectedCount, response.Count());
+
+            Assert.AreEqual(request.Files.Count(), response.Where(item =>
+                    item.Headers.ContentDisposition.Name == "\"FilePart[]\"" &&
+                    new Regex("file\\d.txt").IsMatch(item.Headers.ContentDisposition.FileName)
+                )
+                .Count()
+            );
+
+            Assert.AreEqual(
+                request.StringArray.Length,
+                response.Where(item => item.Headers.ContentDisposition.Name == "\"StringArray[]\"").Count()
+            );
+
+            Assert.AreEqual(
+                request.IntArray.Length,
+                response.Where(item => item.Headers.ContentDisposition.Name == "\"Id[]\"").Count()
+            );
+        }
+
+        [Test]
+        public void TestLocalAndHierarchy()
+        {
+            var request = new
+            {
+                Field1 = "Field1String",
+                Field2 = 2,
+                Field3 = new
+                {
+                    Field3Field1 = "Test",
+                    Field3Field2 = 2
+                },
+                field4 = new[] {1, 2, 3}
+            };
+
+            var response = TiberHealth.Serializer.FormDataSerializer.Serialize(request) as MultipartFormDataContent;
+            Assert.IsNotNull(response);
+            
+            Assert.IsNotNull(response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"Field1\""));
+            Assert.IsNotNull(response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"Field2\""));
+            Assert.IsNotNull(response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"Field3[Field3Field1]\""));
+            Assert.IsNotNull(response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"Field3[Field3Field2]\""));
+            
+            Assert.AreEqual(0, response.Count(item => item.Headers.ContentDisposition.Name == "\"Field4[]\""));
+            Assert.AreEqual(request.field4.Length, response.Count(item => item.Headers.ContentDisposition.Name == "\"field4[]\""));
         }
     }
 }

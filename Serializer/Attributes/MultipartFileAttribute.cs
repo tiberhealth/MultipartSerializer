@@ -2,7 +2,7 @@
 using System.Net.Http.Headers;
 using TiberHealth.Serializer.Exceptions;
 
-namespace TiberHealth.Serializer
+namespace TiberHealth.Serializer.Attributes
 {
     /// <summary>
     /// Identifies a class object that is a file. Class objects that are not identified 
@@ -23,27 +23,21 @@ namespace TiberHealth.Serializer
         /// constructor to set the name of the part
         /// </summary>
         /// <param name="name">String value to use as the name. (Null means to use the prop[erty name</param>
+        // ReSharper disable once MemberCanBePrivate.Global
         public MultipartFileAttribute(string name): base(name)
         {
             this.Value = "FileBytes";  // Default for value
         }
 
-        /// <summary>
-        /// Gets the value of the property that is defined in the attribute Value field
-        /// If the property does not exist, then the value for the Name property is passed as a constant.
-        /// </summary>
-        /// <param name="bodyObject">Object to look for the name object</param>
-        /// <returns>The value for Value</returns>
-        internal override object GetValue(object bodyObject)
+        public byte[] GetFile<TSource>(TSource source)
         {
-            if (string.IsNullOrEmpty(this.Value)) throw new ArgumentNullException(nameof(this.Value), "Byte[] field required for file part.");
+            var byteProperty = source.GetType().GetProperty(this.Value ?? "FileBytes");
+            if (byteProperty == null) return new byte[0];
 
-            var objectValue = base.GetValue(bodyObject);
-            if (objectValue is byte[]) return objectValue;
-
-            throw new InvalidTypeException("Files must be presented as a byte array");            
+            var value = byteProperty.GetValue(source) as byte[];
+            return value ?? new byte[0];
         }
-
+        
         internal void SetDisposition(object propertyValue,  HttpContentHeaders headers)
         {
             if (headers.ContentDisposition == null) return;
@@ -69,7 +63,6 @@ namespace TiberHealth.Serializer
                 throw new InvalidTypeException($"Content Type {mimeType} is invalid.", ex);
             }
         }
-
 
         private string GetField(string fieldName, object body, bool defaultValue = true) => 
             body.GetType().GetProperty(fieldName)?.GetValue(body)?.ToString() ?? (defaultValue ? fieldName : null);

@@ -32,6 +32,6 @@
     <Folder Include="Extensions\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Attributes\" />
-    <Folder Include="ContentSerialziers\" />
+    <Folder Include="ContentSerializers\" />
   </ItemGroup>
 </Project>
