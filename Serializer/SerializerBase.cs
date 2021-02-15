@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using TiberHealth.Serializer.Attributes;
 using TiberHealth.Serializer.Extensions;
 
@@ -21,7 +22,21 @@ namespace TiberHealth.Serializer
 
         protected bool IsClass => this.PropertyType.IsClass;
         protected bool IsEnum => this.PropertyType.IsEnum;
-        protected IEnumerable<PropertyInfo> Properties => this.PropertyType.GetProperties();
+
+        protected IEnumerable<PropertyInfo> Properties => this.GetProperties(this.PropertyType);
+
+        private IEnumerable<PropertyInfo> GetProperties(Type type)
+        {
+            var properties = type.GetProperties().ToList();
+
+            if (type.IsInterface)
+            {
+                type.GetInterfaces().ToList()
+                    .ForEach(item => { properties.AddRange(this.GetProperties(item)); });
+            }
+
+            return properties.GroupBy(item => item.Name).Select(item => item.First()).ToArray();
+        }
 
         private MultipartAttribute MultipartAttribute =>
             this.PropertyType
@@ -34,7 +49,7 @@ namespace TiberHealth.Serializer
 
         protected bool IsType<TType>() => this.PropertyType.IsType<TType>();
         protected bool IsNotType<TType>() => !this.IsType<TType>();
-        
+
         protected string DetermineName(PropertyInfo property)
         {
             return
