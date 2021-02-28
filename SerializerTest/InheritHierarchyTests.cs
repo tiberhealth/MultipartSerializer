@@ -13,7 +13,7 @@ namespace SerializerTest
 
     public interface IClassB : IClassA
     {
-        string FirstName { get; }   // need to force a duplicate for testing
+        new string FirstName { get; }   // need to force a duplicate for testing
         string FavoriteDrink { get; }
     }
     public class ClassA: IClassA    
