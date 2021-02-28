@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net.Http;
 using System.Reflection;
+using TiberHealth.Serializer.Attributes;
+using TiberHealth.Serializer.Extensions;
 
 namespace TiberHealth.Serializer.ContentSerializers
 {
@@ -13,7 +15,14 @@ namespace TiberHealth.Serializer.ContentSerializers
         protected override HttpContent[] Content()
         {
             if (Enum.TryParse(typeof(TEnum), this.Value.ToString(), out var enumValue)) {
-                return new[] { this.Content<StringContent>(((int)enumValue).ToString()) };
+
+                var attribute = this.Property.HasCustomAttribute<MultipartAttribute>(out var propAttribute) ? propAttribute : 
+                    typeof(TEnum).HasCustomAttribute<MultipartAttribute>(out var enumAttribute) ? enumAttribute :
+                    null;
+
+                return (attribute?.EnumAsString ?? false) ?
+                    new[] { this.Content<StringContent>(enumValue.ToString()) } :
+                    new[] { this.Content<StringContent>(((int)enumValue).ToString()) };
             }
 
             return null;

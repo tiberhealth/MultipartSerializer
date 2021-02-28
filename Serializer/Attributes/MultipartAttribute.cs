@@ -18,6 +18,12 @@ namespace TiberHealth.Serializer.Attributes
         public string Value { get; set; }
 
         /// <summary>
+        /// Identifies that an enum value should be represented by its string not number
+        /// (default is false)
+        /// </summary>
+        public bool EnumAsString { get; set; }
+
+        /// <summary>
         /// Main Constructor
         /// </summary>
         public MultipartAttribute() { }
