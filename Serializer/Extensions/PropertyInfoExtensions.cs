@@ -90,6 +90,20 @@ namespace TiberHealth.Serializer.Extensions
         }
 
         /// <summary>
+        /// Checks the field for a custom attribute
+        /// </summary>
+        /// <typeparam name="TAttribute">Attribute to find</typeparam>
+        /// <param name="property">The property to check</param> 
+        /// <param name="attribute">Out variable of the actual attribute</param>
+        /// <returns>True/False indicating if the property was found</returns>
+        public static bool HasCustomAttribute<TAttribute>(this FieldInfo field, out TAttribute attribute)
+            where TAttribute : Attribute
+        {
+            attribute = field?.GetCustomAttribute<TAttribute>();
+            return attribute != null;
+        }
+
+        /// <summary>
         /// Determines if a type has a custom attribute
         /// </summary>
         /// <param name="type">The type to check</param>

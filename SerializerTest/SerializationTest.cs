@@ -22,6 +22,14 @@ namespace SerializerTest
         {
         }
 
+        [Multipart(EnumAsString = true)]
+        internal enum TestStringEnum
+        {
+            testValue1 = 1,
+            testValue2 = 2,
+            [EnumSerializedValue("peterpan")]testValue3 = 4
+        }
+
         internal enum TestEnum
         {
             value1 = 1,
@@ -61,6 +69,8 @@ namespace SerializerTest
 
             public TestEnum EnumTest => TestEnum.value2;
             [Multipart(EnumAsString = true)] public TestEnum EnumAsString => TestEnum.value3;
+
+            [JsonProperty("string-test-enum")] public TestStringEnum StringEnumTest => TestStringEnum.testValue3;
 
             [Newtonsoft.Json.JsonIgnore, ExpectNotSent]
             public string DoNotSend => "This should not be sent";
@@ -123,6 +133,9 @@ namespace SerializerTest
 
             var enumStringValue = await response.Single(item => item.Headers.ContentDisposition.Name == "\"EnumAsString\"").ReadAsStringAsync();
             Assert.AreEqual("value3", enumStringValue);
+
+            var testEnumString = await response.Single(item => item.Headers.ContentDisposition.Name == "\"string-test-enum\"").ReadAsStringAsync();
+            Assert.AreEqual("peterpan", testEnumString);
 
             var testfile = response.SingleOrDefault(item => item.Headers.ContentDisposition.Name == "\"Testfile\"");
             Assert.IsNotNull(testfile);

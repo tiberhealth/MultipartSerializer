@@ -37,6 +37,8 @@ If the property is a class structure, the serializer will default to a StringCon
 
 The Mutipart attribute is used for two primary purposes.
 
+### Name Overriding
+
 The first purpose is to override the name of the form-data part.  
 
 ```c#
@@ -47,7 +49,7 @@ The above code will serialize the ***State*** field as ***LocalState*** in the c
 
 **Note =>** *You can also rename a field using the **JsonPropertyName** from System.Text.Json.Serialization or the **JsonProperty** from Newtonsoft.Json to name the field for serialization.*
 
-
+### Class Value Identification
 
 The second purpose of the Multipart Attribute is to identfy the data field for a property class. 
 ```c#
@@ -60,6 +62,31 @@ var formData = TiberHealth.Serializer.FormDataserializer.FormDataContent(seriala
 ```
 
 The above code will create a StringContent part called CustomerGuid and place the ObjectGuid value from the Customer record for its value. 
+
+### Enum Behavior
+
+Another purpose of the Multipart field is to identify if an Enum should be represented by it value or the enum field name (string). 
+
+***The default behavior is for Enums to be displayed as its value***
+
+The Multipart attribute can be added directly to the Enum for global usage
+
+```c#
+[Multipart(EnumAsString = true)]
+internal enum TestStringEnum
+{
+  testValue1 = 1,
+  testValue2 = 2,
+  [EnumSerializedValue("peterpan")]testValue3 = 4
+}
+```
+
+or it can be added to the field using the Enum for independant behavior.  
+
+```
+[Multipart(EnumAsString = true)] public TestEnum EnumAsString => TestEnum.value3;
+```
+The ***EnumSerializedValue*** attribute overrides the string value for an Enum when marked as *EnumAsString=true*.
 
 ## [MultipartFile] Attribute
 
