@@ -24,9 +24,23 @@ namespace TiberHealth.Serializer.Attributes
         public bool EnumAsString { get; set; }
 
         /// <summary>
+        /// Tells the serializer to create a string content with all the values in a delimited string format
+        /// </summary>
+        public bool EnumerationAsXsv { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string EnumerationDelimiter { get; set; }
+
+        /// <summary>
         /// Main Constructor
         /// </summary>
-        public MultipartAttribute() { }
+        public MultipartAttribute()
+        {
+            this.EnumerationAsXsv = false;
+            this.EnumerationDelimiter = ",";
+        }
 
         /// <summary>
         /// Constructor to set he name field

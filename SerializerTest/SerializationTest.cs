@@ -82,6 +82,9 @@ namespace SerializerTest
 
             [ExpectNotSent] public DateTime? NullDateTime => null;
             public DateTime ValidDateTime { get; set; }
+
+            [Multipart("EnumEnumerationTest", EnumAsString = true, EnumerationAsXsv = true, EnumerationDelimiter = "|")]
+            public TestStringEnum[] EnumEnumerationTest => new[] { TestStringEnum.testValue1, TestStringEnum.testValue3 };
         }
 
         [Test]
@@ -126,6 +129,11 @@ namespace SerializerTest
 
             Assert.IsAssignableFrom<ByteArrayContent>(response.SingleOrDefault(item =>
                 item.Headers.ContentDisposition.Name == "\"File\""));
+
+            var enumerationEnumTest = await response.Single(item => item.Headers.ContentDisposition.Name == "\"EnumEnumerationTest\"").ReadAsStringAsync();
+            Assert.IsNotNull(enumerationEnumTest);
+            Assert.IsNotEmpty(enumerationEnumTest);
+            Assert.AreEqual("testValue1|peterpan", enumerationEnumTest);
 
             var enumValue = await response.Single(item => item.Headers.ContentDisposition.Name == "\"EnumTest\"")
                 .ReadAsStringAsync();

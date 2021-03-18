@@ -12,7 +12,7 @@ namespace TiberHealth.Serializer.ContentSerializers
         private IContentSerializer ParentObject { get; }
         protected PropertyInfo Property { get; }
 
-        public string Name
+        public virtual string Name
         {
             get
             {
@@ -21,9 +21,10 @@ namespace TiberHealth.Serializer.ContentSerializers
                 var parentName = this.ParentObject?.Name?.Trim(); // Trims might not be necessarry.
                 var propertyName = this.DetermineName(this.Property)?.Trim();
 
-                if (this.Property.PropertyType.IsEnumerable()) propertyName += "[]";
+                var returnValue = !string.IsNullOrWhiteSpace(parentName) ? $"{parentName}[{propertyName}]" : propertyName;
+                if (this.Property.PropertyType.IsEnumerable()) returnValue += "[]";
 
-                return !string.IsNullOrWhiteSpace(parentName) ? $"{parentName}[{propertyName}]" : propertyName;
+                return returnValue;
             }
         }
 
