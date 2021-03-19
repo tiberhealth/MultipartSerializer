@@ -40,7 +40,7 @@ steps:
     versioningScheme: 'byBuildNumber'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Uploading to Private Nuget'
+  displayName: 'Uploading to Tiber Health Nuget'
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
@@ -48,6 +48,7 @@ steps:
     publishVstsFeed: '0bd21b8b-3ec1-4cf1-9e2a-c491e2a220a5'
 
 - task: NuGetCommand@2
+  displayName: 'Push to nuget.org'
   condition: and(succeeded(), eq(variables.nuget, true))
   inputs:
     command: 'push'
@@ -56,6 +57,8 @@ steps:
     publishFeedCredentials: 'Nuget.Org'
 
 - task: GitHubRelease@1
+  displayName: 'Creating Release on GitHub'
+  condition: and(succeeded(), eq(variables.nuget, true))
   inputs:
     gitHubConnection: 'Tiberhealth GitHub'
     repositoryName: 'tiberhealth/MultipartSerializer'
