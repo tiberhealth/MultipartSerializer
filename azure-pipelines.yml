@@ -43,7 +43,7 @@ steps:
   displayName: 'Uploading to Private Nuget'
   inputs:
     command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/*.nupkg'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
     nuGetFeedType: 'internal'
     publishVstsFeed: '0bd21b8b-3ec1-4cf1-9e2a-c491e2a220a5'
 
@@ -54,4 +54,15 @@ steps:
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
     nuGetFeedType: 'external'
     publishFeedCredentials: 'Nuget.Org'
-    
+
+- task: GitHubRelease@1
+  inputs:
+    gitHubConnection: 'Tiberhealth GitHub'
+    repositoryName: 'tiberhealth/XsvSerializer'
+    action: 'create'
+    target: '$(Build.SourceVersion)'
+    tagSource: 'userSpecifiedTag'
+    tag: 'v$(MajorVersion).$(MinorVersion).$(PatchVersion)'
+    releaseNotesFilePath: 'README.md'
+    changeLogCompareToRelease: 'lastFullRelease'
+    changeLogType: 'commitBased'
