@@ -40,6 +40,7 @@ namespace TiberHealth.Serializer.Attributes
         {
             this.EnumerationAsXsv = false;
             this.EnumerationDelimiter = ",";
+            this.EnumAsString = false;
         }
 
         /// <summary>

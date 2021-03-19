@@ -14,14 +14,14 @@ namespace TiberHealth.Serializer.ContentSerializers
 
         protected override HttpContent[] Content()
         {
-            if (Enum.TryParse(typeof(TEnum), this.Value.ToString(), out var enumValue)) {
-
+            if (Enum.TryParse(typeof(TEnum), this.Value.ToString(), out var enumValue))
+            {
                 var attribute = this.Property.HasCustomAttribute<MultipartAttribute>(out var propAttribute) ? propAttribute : 
                     typeof(TEnum).HasCustomAttribute<MultipartAttribute>(out var enumAttribute) ? enumAttribute :
                     null;
 
                 var enumAsString = this.Property.HasCustomAttribute<EnumAsStringAttribute>(out var easAttribute) ? easAttribute :
-                    typeof(TEnum).HasCustomAttribute<EnumAsStringAttribute>(out var easEnumAttribute) ? easAttribute :
+                    typeof(TEnum).HasCustomAttribute<EnumAsStringAttribute>(out var easEnumAttribute) ? easEnumAttribute :
                     null;
 
                 if (
