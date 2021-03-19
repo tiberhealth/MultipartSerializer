@@ -64,4 +64,5 @@ steps:
     tagSource: 'userSpecifiedTag'
     tag: 'v$(MajorVersion).$(MinorVersion).$(PatchVersion)'
     releaseNotesFilePath: 'README.md'
-    addChangeLog: false
+    changeLogCompareToRelease: 'lastFullRelease'
+    changeLogType: 'commitBased'
