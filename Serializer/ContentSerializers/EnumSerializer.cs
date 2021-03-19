@@ -20,8 +20,13 @@ namespace TiberHealth.Serializer.ContentSerializers
                     typeof(TEnum).HasCustomAttribute<MultipartAttribute>(out var enumAttribute) ? enumAttribute :
                     null;
 
+                var enumAsString = this.Property.HasCustomAttribute<EnumAsStringAttribute>(out var easAttribute) ? easAttribute :
+                    typeof(TEnum).HasCustomAttribute<EnumAsStringAttribute>(out var easEnumAttribute) ? easAttribute :
+                    null;
 
-                if (attribute?.EnumAsString ?? false)
+                if (
+                    (attribute?.EnumAsString ??  false) ||
+                    (enumAsString?.Enabled ?? false))
                 {
                     var field = enumValue.GetType().GetField(enumValue.ToString());
                     field.HasCustomAttribute<EnumSerializedValueAttribute>(out var serializedValue);

@@ -22,7 +22,7 @@ namespace SerializerTest
         {
         }
 
-        [Multipart(EnumAsString = true)]
+        [EnumAsString]
         internal enum TestStringEnum
         {
             testValue1 = 1,
