@@ -58,11 +58,11 @@ steps:
 - task: GitHubRelease@1
   inputs:
     gitHubConnection: 'Tiberhealth GitHub'
-    repositoryName: 'tiberhealth/XsvSerializer'
+    repositoryName: 'tiberhealth/MultipartSerializer'
     action: 'create'
     target: '$(Build.SourceVersion)'
     tagSource: 'userSpecifiedTag'
-    tag: 'v$(MajorVersion).$(MinorVersion).$(PatchVersion)'
+    tag: '$(Build.BuildNumber)'
     releaseNotesFilePath: 'README.md'
     changeLogCompareToRelease: 'lastFullRelease'
     changeLogType: 'commitBased'
