@@ -85,7 +85,7 @@ namespace TiberHealth.Serializer.Extensions
         public static bool HasCustomAttribute<TAttribute>(this PropertyInfo property, out TAttribute attribute)
             where TAttribute : Attribute
         {
-            attribute = property?.GetCustomAttribute<TAttribute>();
+            attribute = property?.GetCustomAttribute<TAttribute>(true);
             return attribute != null;
         }
 
@@ -99,7 +99,7 @@ namespace TiberHealth.Serializer.Extensions
         public static bool HasCustomAttribute<TAttribute>(this FieldInfo field, out TAttribute attribute)
             where TAttribute : Attribute
         {
-            attribute = field?.GetCustomAttribute<TAttribute>();
+            attribute = field?.GetCustomAttribute<TAttribute>(true);
             return attribute != null;
         }
 
@@ -113,7 +113,7 @@ namespace TiberHealth.Serializer.Extensions
         public static bool HasCustomAttribute<TAttribute>(this Type type, out TAttribute attribute)
             where TAttribute : Attribute
         {
-            attribute = type.GetCustomAttribute<TAttribute>();
+            attribute = type.GetCustomAttribute<TAttribute>(true);
             return attribute != null; 
         }
         

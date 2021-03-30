@@ -66,6 +66,7 @@ steps:
     target: '$(Build.SourceVersion)'
     tagSource: 'userSpecifiedTag'
     tag: '$(Build.BuildNumber)'
-    releaseNotesFilePath: 'README.md'
     changeLogCompareToRelease: 'lastFullRelease'
     changeLogType: 'commitBased'
+
+
