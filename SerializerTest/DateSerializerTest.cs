@@ -36,7 +36,7 @@ namespace SerializerTest
 
             var normalDateTest = await response.Single(item => item.Headers.ContentDisposition.Name == "\"normal-date\"").ReadAsStringAsync();
             Assert.AreNotEqual(normalDateTime.ToString("yyyy-MM-dd HH:mm:ss"), normalDateTest);
-            Assert.AreEqual(normalDateTime.ToString("MM/dd/yyyy HH:mm:ss"), normalDateTest);
+            Assert.AreEqual(normalDateTime.ToString("M/d/yyyy HH:mm:ss"), normalDateTest);
         }
 
 
