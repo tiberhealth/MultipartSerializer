@@ -26,6 +26,7 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish library'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   inputs:
     command: 'publish'
     publishWebProjects: false
@@ -34,6 +35,7 @@ steps:
     
 - task: DotNetCoreCLI@2
   displayName: 'Pack Library'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj'
@@ -41,6 +43,7 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: 'Uploading to Tiber Health Nuget'
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
