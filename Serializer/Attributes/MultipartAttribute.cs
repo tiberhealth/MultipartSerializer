@@ -29,9 +29,16 @@ namespace TiberHealth.Serializer.Attributes
         public bool EnumerationAsXsv { get; set; }
 
         /// <summary>
-        /// 
+        /// Delimiter for EnumerationAsXsv = true
+        /// Default Value is a comma (,)
         /// </summary>
         public string EnumerationDelimiter { get; set; }
+
+        /// <summary>
+        /// Format for changing System.DateTime to string
+        /// uses standard C#/.Net string formatting.
+        /// </summary>
+        public string DateTimeFormat { get; set; }
 
         /// <summary>
         /// Main Constructor
