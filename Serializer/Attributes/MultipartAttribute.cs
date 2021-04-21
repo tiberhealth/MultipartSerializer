@@ -3,7 +3,7 @@
 namespace TiberHealth.Serializer.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Enum, AllowMultiple = false, Inherited = true)]
-    public class MultipartAttribute: Attribute
+    public class MultipartAttribute: Attribute, IMultipartAttribute
     {
         /// <summary>
         /// Name override for the property.

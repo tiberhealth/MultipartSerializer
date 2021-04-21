@@ -10,7 +10,7 @@ namespace SerializerTest
 {
     public interface IClassA
     {
-        [JsonProperty("first_name")] string FirstName { get; }
+        [Multipart("first_name")] string FirstName { get; }
         string LastName { get; }
     }
 
@@ -19,7 +19,7 @@ namespace SerializerTest
         new string FirstName { get; }   // need to force a duplicate for testing
         [Multipart("favorite_drink")] string FavoriteDrink { get; }
     }
-    public class ClassA: IClassA    
+    public class ClassA: IClassA     
     {
         public string FirstName => "Bryan";
         public string LastName => "Lenihan";
@@ -44,9 +44,8 @@ namespace SerializerTest
             Assert.AreEqual(3, context.Count());
 
             Assert.True(context.Any(field => field.Headers.ContentDisposition.Name == "\"favorite_drink\""));
-            Assert.True(context.Any(field => field.Headers.ContentDisposition.Name == "\"FirstName\""));
+            Assert.True(context.Any(field => field.Headers.ContentDisposition.Name == "\"first_name\""));
             Assert.True(context.Any(field => field.Headers.ContentDisposition.Name == "\"LastName\""));
-       
         }
 
         [Test]
