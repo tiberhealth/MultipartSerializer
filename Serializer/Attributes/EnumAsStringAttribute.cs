@@ -2,7 +2,7 @@
 namespace TiberHealth.Serializer.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Enum, AllowMultiple = false, Inherited = true)]
-    public class EnumAsStringAttribute: Attribute
+    public class EnumAsStringAttribute: Attribute, IMultipartAttribute
     {
         public bool Enabled { get; set; }
 

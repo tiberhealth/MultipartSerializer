@@ -3,6 +3,7 @@ using System.Collections;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using TiberHealth.Serializer.Attributes;
 using TiberHealth.Serializer.Extensions;
 
 namespace TiberHealth.Serializer.ContentSerializers
@@ -44,7 +45,17 @@ namespace TiberHealth.Serializer.ContentSerializers
                 return new EnumSerializer<TValue>(this.Value, this.ParentObject, this.Property).ToContent();
 
             if (this.IsType<byte[]>())
-                return new ByteArraySerializer(this.Value as byte[], this.ParentObject, this.Property).ToContent();
+                return new ByteArraySerializer(this.Value as byte[], this.ParentObject, this.Property).ToContent();       
+
+            // check to see if object is date and should format is specific way
+            if (this.Value is DateTime dateValue)
+            {
+                var attribute = this.Property.GetCustomAttribute<MultipartAttribute>();
+                if (!string.IsNullOrEmpty(attribute?.DateTimeFormat))
+                {
+                    return new StringSerializer(dateValue.ToString(attribute.DateTimeFormat), this.ParentObject, this.Property).ToContent();
+                }
+            }
 
             if (this.IsType<string>() || this.PropertyType.IsValueType)
                 return new StringSerializer(this.Value.ToString(), this.ParentObject, this.Property).ToContent();

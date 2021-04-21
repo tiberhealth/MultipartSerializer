@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
-using System.Runtime.CompilerServices;
+using Newtonsoft.Json.Serialization;
 using TiberHealth.Serializer.Attributes;
 using TiberHealth.Serializer.Extensions;
 
@@ -27,15 +27,39 @@ namespace TiberHealth.Serializer
 
         private IEnumerable<PropertyInfo> GetProperties(Type type)
         {
-            var properties = type.GetProperties().ToList();
+            var properties = new Dictionary<string, PropertyInfo>();
+            this.GetProperties(properties, type);
+            return properties.OrderBy(item => item.Key).Select(item => item.Value).Where(item => item != null).ToArray();
+        }
 
-            if (type.IsInterface)
+        private void GetProperties(Dictionary<string, PropertyInfo> activeProperties, Type type)
+        {
+            foreach (var property in type.GetProperties())
             {
-                type.GetInterfaces().ToList()
-                    .ForEach(item => { properties.AddRange(this.GetProperties(item)); });
+                if (activeProperties.ContainsKey(property.Name)) {
+                    this.SwapProperties(activeProperties, property);
+                    continue;
+                }
+
+                activeProperties.Add(property.Name, property);
             }
 
-            return properties.GroupBy(item => item.Name).Select(item => item.First()).ToArray();
+            type.GetInterfaces().ToList().ForEach(item => this.GetProperties(activeProperties, item));                
+        }
+
+        private void SwapProperties(Dictionary<string, PropertyInfo> properties, PropertyInfo property)
+        {
+            if (property == null) return;
+            if (!properties.TryGetValue(property.Name, out var current)) throw new KeyNotFoundException($"key {property.Name} told to swap, but not found.");
+
+            var currentCustom = current.GetCustomAttributes();
+            var propertyCustom = property.GetCustomAttributes();
+
+            if (currentCustom.Count() == 0 && propertyCustom.Count() == 0) return;
+            if (currentCustom.Count() > 0) return;
+            if (propertyCustom.Count() == 0) return;
+
+            properties[property.Name] = property;           
         }
 
         private MultipartAttribute MultipartAttribute =>

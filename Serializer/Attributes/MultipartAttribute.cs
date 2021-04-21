@@ -3,7 +3,7 @@
 namespace TiberHealth.Serializer.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Enum, AllowMultiple = false, Inherited = true)]
-    public class MultipartAttribute: Attribute
+    public class MultipartAttribute: Attribute, IMultipartAttribute
     {
         /// <summary>
         /// Name override for the property.
@@ -29,9 +29,16 @@ namespace TiberHealth.Serializer.Attributes
         public bool EnumerationAsXsv { get; set; }
 
         /// <summary>
-        /// 
+        /// Delimiter for EnumerationAsXsv = true
+        /// Default Value is a comma (,)
         /// </summary>
         public string EnumerationDelimiter { get; set; }
+
+        /// <summary>
+        /// Format for changing System.DateTime to string
+        /// uses standard C#/.Net string formatting.
+        /// </summary>
+        public string DateTimeFormat { get; set; }
 
         /// <summary>
         /// Main Constructor

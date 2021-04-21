@@ -8,7 +8,7 @@ namespace TiberHealth.Serializer.Attributes
     /// Identifies a class object that is a file. Class objects that are not identified 
     /// </summary>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    public class MultipartFileAttribute: MultipartAttribute
+    public class MultipartFileAttribute: MultipartAttribute, IMultipartAttribute
     {
         public string FileName { get; set; }
         public string ContentType { get; set; }
