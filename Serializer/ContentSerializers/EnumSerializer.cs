@@ -8,7 +8,8 @@ namespace TiberHealth.Serializer.ContentSerializers
 {
     internal class EnumSerializer<TEnum>: ContentSerializer<TEnum>
     {
-        public EnumSerializer(TEnum value, IContentSerializer parent, PropertyInfo property): base(value, parent, property)
+        public EnumSerializer(TEnum value, IContentSerializer parent, PropertyInfo property, ISerializerOptions serializerOptions)
+            : base(value, parent, property, serializerOptions)
         {
         }
 
@@ -29,10 +30,13 @@ namespace TiberHealth.Serializer.ContentSerializers
                     (enumAsString?.Enabled ?? false))
                 {
                     var field = enumValue.GetType().GetField(enumValue.ToString());
-                    field.HasCustomAttribute<EnumSerializedValueAttribute>(out var serializedValue);
+                    field.HasCustomAttribute<EnumSerializedValueAttribute>(out var customAttribute);
 
-                    return new[] { this.Content<StringContent>(serializedValue?.Value?.ToString() ?? enumValue.ToString()) };
+                    var serializedValue = customAttribute?.Value?.ToString() ??
+                                                this.SerializerOptions?.EnumNameResolver?.ConvertName(enumValue.ToString()) ??
+                                                enumValue.ToString();
 
+                    return new[] { this.Content<StringContent>(serializedValue) };
                 }
 
                 return new[] { this.Content<StringContent>(((int)enumValue).ToString()) };

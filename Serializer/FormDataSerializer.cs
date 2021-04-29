@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using System.Linq;
 using TiberHealth.Serializer.ContentSerializers;
+using System;
 
 namespace TiberHealth.Serializer
 {
@@ -13,21 +14,28 @@ namespace TiberHealth.Serializer
         /// <typeparam name="TBody"></typeparam>
         /// <param name="bodyObject"></param>
         /// <returns></returns>
-        public static HttpContent Serialize<TBody>(TBody bodyObject) where TBody : class =>
-            new FormDataSerializer<TBody>(bodyObject).Serialize();
+        public static HttpContent Serialize<TBody>(TBody bodyObject, Action<ISerializerOptions> optionsFactory = null, string boundry = null) where TBody : class =>
+            new FormDataSerializer<TBody>(bodyObject).Serialize(optionsFactory, boundry);
      }
 
     public class FormDataSerializer<TBody> : SerializerBase<TBody>
         where TBody: class
     {
+        private ISerializerOptions SerializerOptions { get; set;  }
         internal FormDataSerializer(TBody bodyObject): base(bodyObject) { }
 
         protected override HttpContent[] Content() =>
-            new ClassSerializer<TBody>(this.Value).ToContent();
+            new ClassSerializer<TBody>(this.Value, this.SerializerOptions).ToContent();
 
-        public HttpContent Serialize(string boundary = null)
+        public HttpContent Serialize(Action<ISerializerOptions> serializerOptionsFactory = null, string boundary = null)
         {
             var form = string.IsNullOrWhiteSpace(boundary) ? new MultipartFormDataContent() : new MultipartFormDataContent(boundary);
+
+            if (serializerOptionsFactory != null)
+            {
+                this.SerializerOptions = new SerializerOptions();
+                serializerOptionsFactory?.Invoke(this.SerializerOptions);
+            }
 
             this.ToContent()
                 .ToList()

@@ -5,7 +5,8 @@ namespace TiberHealth.Serializer.ContentSerializers
 {
     internal class ByteArraySerializer: ContentSerializer<byte[]>
     {
-        internal ByteArraySerializer(byte[] value, IContentSerializer parent, PropertyInfo property): base(value, parent, property)
+        internal ByteArraySerializer(byte[] value, IContentSerializer parent, PropertyInfo property, ISerializerOptions serializerOptions)
+            : base(value, parent, property, serializerOptions)
         {
         }
 

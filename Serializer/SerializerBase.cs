@@ -74,14 +74,19 @@ namespace TiberHealth.Serializer
         protected bool IsType<TType>() => this.PropertyType.IsType<TType>();
         protected bool IsNotType<TType>() => !this.IsType<TType>();
 
-        protected string DetermineName(PropertyInfo property)
+        protected string DetermineName(PropertyInfo property, IContractNameResolver nameResolver)
         {
-            return
+            var multipartName =
                 property?.MultipartName(() =>
                     this.MultipartAttribute?.Name ??
                     this.GetAttribute<Newtonsoft.Json.JsonPropertyAttribute>()?.PropertyName ??
                     this.GetAttribute<System.Text.Json.Serialization.JsonPropertyNameAttribute>()?.Name
-                ) ?? property?.Name;
+                );
+
+            // If JsonProperty of Multipart attributes are set for the field - they take ownership
+            if (!string.IsNullOrWhiteSpace(multipartName)) return multipartName;
+
+            return nameResolver?.ConvertName(property.Name) ?? property.Name;            
         }
     }
 }

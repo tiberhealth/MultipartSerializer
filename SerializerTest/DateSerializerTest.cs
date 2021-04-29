@@ -38,7 +38,5 @@ namespace SerializerTest
             Assert.AreNotEqual(normalDateTime.ToString("yyyy-MM-dd HH:mm:ss"), normalDateTest);
             Assert.AreEqual(normalDateTime.ToString("M/d/yyyy HH:mm:ss"), normalDateTest);
         }
-
-
-    }
+   }
 }
