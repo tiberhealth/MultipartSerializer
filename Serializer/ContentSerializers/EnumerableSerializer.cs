@@ -1,4 +1,4 @@
-using System;
+    using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,14 +16,16 @@ namespace TiberHealth.Serializer.ContentSerializers
             get
             {
                 var baseName = base.Name;
-                var attribute = this.Property.HasCustomAttribute<MultipartAttribute>(out var propAttribute) ? propAttribute : null;
+                var attribute = this.Property.HasCustomAttribute<MultipartAttribute>(out var propAttribute) ? propAttribute :
+                    null;
 
                 return (attribute?.EnumerationAsXsv ?? false) ?
                     baseName.Trim().TrimEnd('[', ']') :
                     baseName;
             }
         }
-        public EnumerableSerializer(IEnumerable value, IContentSerializer parentObject, PropertyInfo property) : base(value, parentObject, property)
+        public EnumerableSerializer(IEnumerable value, IContentSerializer parentObject, PropertyInfo property, ISerializerOptions serializerOptions)
+            : base(value, parentObject, property, serializerOptions)
         {
         }
 
@@ -33,7 +35,7 @@ namespace TiberHealth.Serializer.ContentSerializers
             foreach (var item in this.Value)
             {
                 var serializerType = typeof(ContentSerializer<>).MakeGenericType(new[] { item.GetType() });
-                var serializer = Activator.CreateInstance(serializerType, item, this.GetParent(), this.Property) as ISerializer;
+                var serializer = Activator.CreateInstance(serializerType, item, this.GetParent(), this.Property, this.SerializerOptions) as ISerializer;
                 contentSections.AddRange(serializer?.ToContent() ?? Array.Empty<HttpContent>());
             }
 

@@ -5,7 +5,8 @@ namespace TiberHealth.Serializer.ContentSerializers
 {
     internal class StringSerializer : ContentSerializer<string>
     {
-        internal StringSerializer(string value, IContentSerializer parent, PropertyInfo property) : base(value, parent, property)
+        internal StringSerializer(string value, IContentSerializer parent, PropertyInfo property, ISerializerOptions serializerOptions) :
+            base(value, parent, property, serializerOptions)
         {
         }
 

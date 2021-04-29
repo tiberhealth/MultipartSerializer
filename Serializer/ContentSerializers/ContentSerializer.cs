@@ -12,6 +12,7 @@ namespace TiberHealth.Serializer.ContentSerializers
     {
         private IContentSerializer ParentObject { get; }
         protected PropertyInfo Property { get; }
+        protected ISerializerOptions SerializerOptions { get; }
 
         public virtual string Name
         {
@@ -20,7 +21,7 @@ namespace TiberHealth.Serializer.ContentSerializers
                 if (this.Property == null) return null;
 
                 var parentName = this.ParentObject?.Name?.Trim(); // Trims might not be necessarry.
-                var propertyName = this.DetermineName(this.Property)?.Trim();
+                var propertyName = this.DetermineName(this.Property, this.SerializerOptions?.DefaultNameResolver)?.Trim();
 
                 var returnValue = !string.IsNullOrWhiteSpace(parentName) ? $"{parentName}[{propertyName}]" : propertyName;
                 if (this.Property.PropertyType.IsEnumerable()) returnValue += "[]";
@@ -32,20 +33,25 @@ namespace TiberHealth.Serializer.ContentSerializers
         protected IContentSerializer GetParent() => this.ParentObject;
 
         // ReSharper disable once MemberCanBeProtected.Global Justification: Used in Activator.Create.
-        public ContentSerializer(TValue value, IContentSerializer parentObject, PropertyInfo property) : base(value)
+        public ContentSerializer(
+            TValue value,
+            IContentSerializer parentObject,
+            PropertyInfo property,
+            ISerializerOptions serializerOptions) : base(value)
         {
             this.Property = property;
             this.ParentObject = parentObject;
+            this.SerializerOptions = serializerOptions;
         }
 
         protected override HttpContent[] Content()
         {
             //TODO: Turn this into a proper factory, if possible
             if (this.IsEnum)
-                return new EnumSerializer<TValue>(this.Value, this.ParentObject, this.Property).ToContent();
+                return new EnumSerializer<TValue>(this.Value, this.ParentObject, this.Property, this.SerializerOptions).ToContent();
 
             if (this.IsType<byte[]>())
-                return new ByteArraySerializer(this.Value as byte[], this.ParentObject, this.Property).ToContent();       
+                return new ByteArraySerializer(this.Value as byte[], this.ParentObject, this.Property, this.SerializerOptions).ToContent();       
 
             // check to see if object is date and should format is specific way
             if (this.Value is DateTime dateValue)
@@ -53,18 +59,18 @@ namespace TiberHealth.Serializer.ContentSerializers
                 var attribute = this.Property.GetCustomAttribute<MultipartAttribute>();
                 var format = attribute?.DateTimeFormat ?? "M/d/yyyy HH:mm:ss";
 
-                return new StringSerializer(dateValue.ToString(format), this.ParentObject, this.Property).ToContent();
+                return new StringSerializer(dateValue.ToString(format), this.ParentObject, this.Property, this.SerializerOptions).ToContent();
             }
 
             if (this.IsType<string>() || this.PropertyType.IsValueType)
-                return new StringSerializer(this.Value.ToString(), this.ParentObject, this.Property).ToContent();
+                return new StringSerializer(this.Value.ToString(), this.ParentObject, this.Property, this.SerializerOptions).ToContent();
 
             if (this.IsType<IEnumerable>())
-                return new EnumerableSerializer(this.Value as IEnumerable, this.ParentObject, this.Property)
+                return new EnumerableSerializer(this.Value as IEnumerable, this.ParentObject, this.Property, this.SerializerOptions)
                     .ToContent();
 
             return this.IsClass
-                ? new ClassSerializer<TValue>(this.Value, this.ParentObject, this.Property).ToContent()
+                ? new ClassSerializer<TValue>(this.Value, this.ParentObject, this.Property, this.SerializerOptions).ToContent()
                 : null;
         }
 

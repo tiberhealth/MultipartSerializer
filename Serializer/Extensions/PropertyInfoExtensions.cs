@@ -65,7 +65,7 @@ namespace TiberHealth.Serializer.Extensions
                 property.HasCustomAttribute<Newtonsoft.Json.JsonPropertyAttribute>(out var newtonsoftAttribute) ? newtonsoftAttribute.PropertyName : 
                 property.HasCustomAttribute<System.Text.Json.Serialization.JsonPropertyNameAttribute>(out var systemJsonAttribute) ? systemJsonAttribute.Name :
                 defaultFactory?.Invoke()
-            ) ?? property.Name;
+            );
 
         /// <summary>
         /// Checks the property for a custom attribute

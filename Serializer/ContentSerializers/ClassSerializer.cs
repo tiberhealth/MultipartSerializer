@@ -9,12 +9,12 @@ namespace TiberHealth.Serializer.ContentSerializers
 {
     internal class ClassSerializer<TValue> : ContentSerializer<TValue>
     {
-        internal ClassSerializer(TValue value) : base(value, null, null)
+        internal ClassSerializer(TValue value, ISerializerOptions serializerOptions) : base(value, null, null, serializerOptions)
         {
         }
 
-        internal ClassSerializer(TValue value, IContentSerializer parent, PropertyInfo property) : base(value, parent,
-            property)
+        internal ClassSerializer(TValue value, IContentSerializer parent, PropertyInfo property, ISerializerOptions serializerOptions)
+            : base(value, parent, property, serializerOptions)
         {
         }
 
@@ -45,14 +45,14 @@ namespace TiberHealth.Serializer.ContentSerializers
             if (propValue == null) return Array.Empty<HttpContent>();
             
             var serializerType = typeof(ContentSerializer<>).MakeGenericType(new[] {propValue.GetType()});
-            var serializer = Activator.CreateInstance(serializerType, propValue, this, property) as ISerializer;
+            var serializer = Activator.CreateInstance(serializerType, propValue, this, property, this.SerializerOptions) as ISerializer;
             return serializer?.ToContent() ?? Array.Empty<HttpContent>();
         }
 
         private HttpContent[] SerializeFile(MultipartFileAttribute attribute)
         {
             var byteArray = attribute.GetFile(this.Value);
-            var fileContents = new ByteArraySerializer(byteArray, this.GetParent(), this.Property).ToContent();
+            var fileContents = new ByteArraySerializer(byteArray, this.GetParent(), this.Property, this.SerializerOptions).ToContent();
 
             attribute.SetDisposition(this.Value, fileContents.SingleOrDefault()?.Headers);
             return fileContents;
