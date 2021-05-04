@@ -57,8 +57,10 @@ namespace TiberHealth.Serializer.ContentSerializers
             if (this.Value is DateTime dateValue)
             {
                 var attribute = this.Property.GetCustomAttribute<MultipartAttribute>();
-                var format = attribute?.DateTimeFormat ?? "M/d/yyyy HH:mm:ss";
+                var format = attribute?.DateTimeFormat ??
+                    this.SerializerOptions?.DefaultDateFormat;
 
+                if (string.IsNullOrWhiteSpace(format)) format = "M/d/yyyy HH:mm:ss";
                 return new StringSerializer(dateValue.ToString(format), this.ParentObject, this.Property, this.SerializerOptions).ToContent();
             }
 
