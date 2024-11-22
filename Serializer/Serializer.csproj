@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>13.0</LangVersion>
         
     <RootNamespace>TiberHealth.Serializer</RootNamespace>
     <AssemblyName>TiberHealth.Serializer</AssemblyName>
@@ -15,7 +15,7 @@
     <PackageTags>Form-Data. POCO, Multipart, Serialization</PackageTags>
     <Title>Form-Data Multipart Serializer</Title>
     <Description>Serializes a C# object into a Multipart Form-Data Object.</Description>
-    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
