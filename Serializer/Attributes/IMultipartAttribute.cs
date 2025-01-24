@@ -1,5 +1,4 @@
-﻿using System;
-namespace TiberHealth.Serializer.Attributes
+﻿namespace TiberHealth.Serializer.Attributes
 {
     internal interface IMultipartAttribute
     {

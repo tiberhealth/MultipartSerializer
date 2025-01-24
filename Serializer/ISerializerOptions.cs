@@ -1,5 +1,4 @@
-﻿using System;
-namespace TiberHealth.Serializer
+﻿namespace TiberHealth.Serializer
 {
     public interface ISerializerOptions
     {
