@@ -1,5 +1,4 @@
-﻿using System;
-namespace TiberHealth.Serializer.Attributes
+﻿namespace TiberHealth.Serializer.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Enum, AllowMultiple = false, Inherited = true)]
     public class EnumAsStringAttribute: Attribute, IMultipartAttribute

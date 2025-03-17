@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Reflection;
-using TiberHealth.Serializer.Attributes;
-using TiberHealth.Serializer.Extensions;
-
-namespace TiberHealth.Serializer.ContentSerializers
+﻿namespace TiberHealth.Serializer.ContentSerializers
 {
     internal class ContentSerializer<TValue> : SerializerBase<TValue>, IContentSerializer
     {

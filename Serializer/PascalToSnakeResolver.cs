@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace TiberHealth.Serializer
+﻿namespace TiberHealth.Serializer
 {
     /// <summary>
     /// Converts properties that are in PascalCase to snake_case

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Net.Http.Headers;
-using TiberHealth.Serializer.Exceptions;
-
-namespace TiberHealth.Serializer.Attributes
+﻿namespace TiberHealth.Serializer.Attributes
 {
     /// <summary>
     /// Identifies a class object that is a file. Class objects that are not identified 

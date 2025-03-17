@@ -1,7 +1,4 @@
-﻿using System.Globalization;
-using System.Linq;
-
-namespace TiberHealth.Serializer
+﻿namespace TiberHealth.Serializer
 {
     /// <summary>
     /// Converter routine to change fields in snake_case to PascalCase 

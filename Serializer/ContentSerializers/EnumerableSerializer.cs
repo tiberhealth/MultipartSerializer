@@ -1,12 +1,3 @@
-    using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Reflection;
-using TiberHealth.Serializer.Attributes;
-using TiberHealth.Serializer.Extensions;
-
 namespace TiberHealth.Serializer.ContentSerializers
 {
     internal class EnumerableSerializer : ContentSerializer<IEnumerable>

@@ -1,7 +1,4 @@
-﻿using System.Net.Http;
-using System.Reflection;
-
-namespace TiberHealth.Serializer.ContentSerializers
+﻿namespace TiberHealth.Serializer.ContentSerializers
 {
     internal class ByteArraySerializer: ContentSerializer<byte[]>
     {

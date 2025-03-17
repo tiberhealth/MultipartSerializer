@@ -1,6 +1,4 @@
-﻿using System.Net.Http;
-
-namespace TiberHealth.Serializer
+﻿namespace TiberHealth.Serializer
 {
     public interface ISerializer
     {

@@ -1,7 +1,4 @@
-﻿using System.Net.Http;
-using System.Linq;
-using TiberHealth.Serializer.ContentSerializers;
-using System;
+﻿using TiberHealth.Serializer.ContentSerializers;
 
 namespace TiberHealth.Serializer
 {

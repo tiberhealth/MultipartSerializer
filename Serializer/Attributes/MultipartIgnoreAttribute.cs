@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TiberHealth.Serializer.Attributes
+﻿namespace TiberHealth.Serializer.Attributes
 {
     /// <summary>
     /// Set a property to be ignored by the serializer

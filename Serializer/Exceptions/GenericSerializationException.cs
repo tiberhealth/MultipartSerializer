@@ -1,7 +1,4 @@
-﻿using System;
-
-
-namespace TiberHealth.Serializer.Exceptions
+﻿namespace TiberHealth.Serializer.Exceptions
 {
     public class GenericSerializationException: Exception
     {
