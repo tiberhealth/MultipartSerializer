@@ -33,7 +33,7 @@ namespace TiberHealth.Serializer.ContentSerializers
             var attribute = this.Property.HasCustomAttribute<MultipartAttribute>(out var propAttribute) ? propAttribute : null;
 
             return (attribute?.EnumerationAsXsv ?? false) ?
-                new[] { ContentAsString(contentSections, attribute) } :
+                new[] { this.ContentAsString(contentSections, attribute) } :
                 contentSections.Where(item => item != null).ToArray();
 
         }

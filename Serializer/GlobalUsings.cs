@@ -10,5 +10,6 @@ global using System.Net.Http.Headers;
 global using System.Reflection;
 global using System.Text.RegularExpressions;
 global using TiberHealth.Serializer.Attributes;
+global using TiberHealth.Serializer.ContentSerializers;
 global using TiberHealth.Serializer.Exceptions;
 global using TiberHealth.Serializer.Extensions;

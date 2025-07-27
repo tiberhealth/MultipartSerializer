@@ -3,7 +3,7 @@
     public static class PropertyInfoExtensions
     {
 
-        private static readonly Type[] IgnoreAttributes =
+        private static readonly Type[] ignoreAttributes =
             new[]
                 {
                     typeof(MultipartIgnoreAttribute),
@@ -11,7 +11,7 @@
                     typeof(System.Text.Json.Serialization.JsonIgnoreAttribute)
                 };
 
-        private static readonly Type[] IncludeAttributes =
+        private static readonly Type[] includeAttributes =
             new[]
                 {
                     typeof(MultipartInclude),
@@ -28,8 +28,8 @@
         /// <param name="property">Property to Analyze</param>
         /// <returns>Boolean: True => Ignore flag is set (ignore), False => Ignore flag is not set (Do NOT ignore)</returns>
         internal static bool IsIgnore(this PropertyInfo property) =>
-            !property.GetCustomAttributes().Any(item => IncludeAttributes.Contains(item.GetType())) &&
-            property.GetCustomAttributes().Any(item => IgnoreAttributes.Contains(item.GetType()));
+            !property.GetCustomAttributes().Any(item => includeAttributes.Contains(item.GetType())) &&
+            property.GetCustomAttributes().Any(item => ignoreAttributes.Contains(item.GetType()));
 
         /// <summary>
         /// Identifies an object elment if it should NOT be ignored.
@@ -56,7 +56,7 @@
         internal static string MultipartName(this PropertyInfo property, Func<string> defaultFactory = null) =>
             (
                 property.HasCustomAttribute<MultipartAttribute>(out var multipartAttribute) ? multipartAttribute.Name :
-                property.HasCustomAttribute<Newtonsoft.Json.JsonPropertyAttribute>(out var newtonsoftAttribute) ? newtonsoftAttribute.PropertyName : 
+                property.HasCustomAttribute<Newtonsoft.Json.JsonPropertyAttribute>(out var newtonsoftAttribute) ? newtonsoftAttribute.PropertyName :
                 property.HasCustomAttribute<System.Text.Json.Serialization.JsonPropertyNameAttribute>(out var systemJsonAttribute) ? systemJsonAttribute.Name :
                 defaultFactory?.Invoke()
             );
@@ -73,7 +73,7 @@
         /// Checks the property for a custom attribute
         /// </summary>
         /// <typeparam name="TAttribute">Attribute to find</typeparam>
-        /// <param name="property">The property to check</param> 
+        /// <param name="property">The property to check</param>
         /// <param name="attribute">Out variable of the actual attribute</param>
         /// <returns>True/False indicating if the property was found</returns>
         public static bool HasCustomAttribute<TAttribute>(this PropertyInfo property, out TAttribute attribute)
@@ -87,7 +87,7 @@
         /// Checks the field for a custom attribute
         /// </summary>
         /// <typeparam name="TAttribute">Attribute to find</typeparam>
-        /// <param name="property">The property to check</param> 
+        /// <param name="property">The property to check</param>
         /// <param name="attribute">Out variable of the actual attribute</param>
         /// <returns>True/False indicating if the property was found</returns>
         public static bool HasCustomAttribute<TAttribute>(this FieldInfo field, out TAttribute attribute)
@@ -108,9 +108,9 @@
             where TAttribute : Attribute
         {
             attribute = type.GetCustomAttribute<TAttribute>(true);
-            return attribute != null; 
+            return attribute != null;
         }
-        
+
         /// <summary>
         /// Determine if a type is a specific type
         /// </summary>

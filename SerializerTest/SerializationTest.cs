@@ -1,18 +1,4 @@
-﻿// ReSharper disable All Justification: this is a test class/file
-
-using System;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Http;
-using NUnit.Framework;
-using System.Reflection;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using TiberHealth.Serializer.Attributes;
-using TiberHealth.Serializer.Extensions;
+// ReSharper disable All Justification: this is a test class/file
 
 namespace SerializerTest
 {

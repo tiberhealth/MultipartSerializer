@@ -16,7 +16,7 @@
                 ? this.SerializeFile(attribute)
                 : this.Properties
                     .Where(prop => prop.IsNotIgnore())
-                    .SelectMany(SerializeProperty)
+                    .SelectMany(this.SerializeProperty)
                     .ToArray();
 
         private bool IsFile(out MultipartFileAttribute attribute)
@@ -25,18 +25,18 @@
                 return this.Property.HasCustomAttribute(out attribute) ||
                        this.PropertyType.HasCustomAttribute(out attribute) ||
                        this.Property.PropertyType.HasCustomAttribute(out attribute);
-            
+
             attribute = null;
             return false;
         }
 
         private HttpContent[] SerializeProperty(PropertyInfo property)
         {
-            if (property == null) return Array.Empty<HttpContent>();            
+            if (property == null) return Array.Empty<HttpContent>();
             var propValue = property.GetValue(this.Value);
 
             if (propValue == null) return Array.Empty<HttpContent>();
-            
+
             var serializerType = typeof(ContentSerializer<>).MakeGenericType(new[] {propValue.GetType()});
             var serializer = Activator.CreateInstance(serializerType, propValue, this, property, this.SerializerOptions) as ISerializer;
             return serializer?.ToContent() ?? Array.Empty<HttpContent>();
