@@ -15,10 +15,10 @@
     <PackageTags>Form-Data. POCO, Multipart, Serialization</PackageTags>
     <Title>Form-Data Multipart Serializer</Title>
     <Description>Serializes a C# object into a Multipart Form-Data Object.</Description>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Extensions\" />
