@@ -9,7 +9,7 @@
 
         public virtual HttpContent[] ToContent() => this.Content()?.Where(item => item != null).ToArray();
 
-        protected Type PropertyType => typeof(TObject);
+        protected Type PropertyType => typeof(TObject) == typeof(object) ? this.Value.GetType() : typeof(TObject);
 
         protected bool IsClass => this.PropertyType.IsClass;
         protected bool IsEnum => this.PropertyType.IsEnum;
